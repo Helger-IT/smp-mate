@@ -15,7 +15,11 @@
       {
         "template": "path/to/ServiceMetadata01.xml",
         "documentIdentifier": "urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100::CrossIndustryInvoice##urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0::D16B",
+        // "documentIdentifierScheme" ist optional, Standardwert ist "busdox-docid-qns"
+        // "documentIdentifierScheme": "busdox-docid-qns",
         "processIdentifier": "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0"
+        // "processIdentifierScheme" ist optional, Standardwert ist "cenbii-procid-ubl"
+        // "processIdentifierScheme": "cenbii-procid-ubl"
       },
       {
         "template": "path/to/ServiceMetadata02.xml",

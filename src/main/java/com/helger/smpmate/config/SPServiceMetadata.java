@@ -25,14 +25,25 @@ import com.helger.smpmate.args.SPArgServiceMetadata;
 
 public final class SPServiceMetadata
 {
+  /** Default document identifier scheme, used if none is provided */
+  public static final String DEFAULT_DOCUMENT_IDENTIFIER_SCHEME = "busdox-docid-qns";
+  /** Default process identifier scheme, used if none is provided */
+  public static final String DEFAULT_PROCESS_IDENTIFIER_SCHEME = "cenbii-procid-ubl";
+
   private final Path m_aTemplate;
+  private final String m_sDocumentIdentifierScheme;
   private final String m_sDocumentIdentifier;
+  private final String m_sProcessIdentifierScheme;
   private final String m_sProcessIdentifier;
 
   public SPServiceMetadata (@Nullable final Path aRel, @Nonnull final SPArgServiceMetadata aOrigin)
   {
     m_aTemplate = SPPaths.toPath (aRel, aOrigin.getTemplate ());
+    m_sDocumentIdentifierScheme = aOrigin.getDocumentIdentifierScheme () == null ? DEFAULT_DOCUMENT_IDENTIFIER_SCHEME
+                                                                                 : aOrigin.getDocumentIdentifierScheme ();
     m_sDocumentIdentifier = aOrigin.getDocumentIdentifier ();
+    m_sProcessIdentifierScheme = aOrigin.getProcessIdentifierScheme () == null ? DEFAULT_PROCESS_IDENTIFIER_SCHEME
+                                                                               : aOrigin.getProcessIdentifierScheme ();
     m_sProcessIdentifier = aOrigin.getProcessIdentifier ();
   }
 
@@ -41,9 +52,29 @@ public final class SPServiceMetadata
     return m_aTemplate;
   }
 
+  /**
+   * @return the document identifier scheme. Never <code>null</code>, defaults to
+   *         {@link #DEFAULT_DOCUMENT_IDENTIFIER_SCHEME}.
+   */
+  @Nonnull
+  public String getDocumentIdentifierScheme ()
+  {
+    return m_sDocumentIdentifierScheme;
+  }
+
   public String getDocumentIdentifier ()
   {
     return m_sDocumentIdentifier;
+  }
+
+  /**
+   * @return the process identifier scheme. Never <code>null</code>, defaults to
+   *         {@link #DEFAULT_PROCESS_IDENTIFIER_SCHEME}.
+   */
+  @Nonnull
+  public String getProcessIdentifierScheme ()
+  {
+    return m_sProcessIdentifierScheme;
   }
 
   public String getProcessIdentifier ()

@@ -48,7 +48,8 @@ public final class SPReaderTest
                  .copy (TestFiles.SAMPLE_TASK_NO_OPTIONS_RESOURCE, TestFiles.SAMPLE_TASK_NO_OPTIONS_PATH)
                  .copy (TestFiles.SAMPLE_TASK_NO_PROXY_RESOURCE, TestFiles.SAMPLE_TASK_NO_PROXY_PATH)
                  .copy (TestFiles.SAMPLE_TASK_WITH_AUTH_RESOURCE, TestFiles.SAMPLE_TASK_WITH_AUTH_PATH)
-                 .copy (TestFiles.SAMPLE_TASK_DELETE_PROCESS_RESOURCE, TestFiles.SAMPLE_TASK_DELETE_PROCESS_PATH);
+                 .copy (TestFiles.SAMPLE_TASK_DELETE_PROCESS_RESOURCE, TestFiles.SAMPLE_TASK_DELETE_PROCESS_PATH)
+                 .copy (TestFiles.SAMPLE_TASK_CUSTOM_SCHEME_RESOURCE, TestFiles.SAMPLE_TASK_CUSTOM_SCHEME_PATH);
   }
 
   private static void _assertTask (@Nonnull final SPTask aTask)
@@ -61,6 +62,9 @@ public final class SPReaderTest
     assertEquals (paths.getServiceGroupTemplate (), TestFiles.TEST_PATH.resolve ("ServiceGroup.xml"));
     assertEquals (1, paths.getServiceMetadata ().size ());
     assertEquals (paths.getServiceMetadata ().get (0).getTemplate (), TestFiles.TEST_PATH.resolve ("ServiceMetadata.xml"));
+    // No schemes in the sample JSON -> defaults apply
+    assertEquals ("busdox-docid-qns", paths.getServiceMetadata ().get (0).getDocumentIdentifierScheme ());
+    assertEquals ("cenbii-procid-ubl", paths.getServiceMetadata ().get (0).getProcessIdentifierScheme ());
 
     final SPArgSMP smp = aTask.getSmp ();
     assertNotNull (smp);
@@ -105,6 +109,15 @@ public final class SPReaderTest
     final SPTask task = SPReader.readTask (TestFiles.SAMPLE_TASK_DELETE_PROCESS_PATH);
     _assertTask (task);
     assertEquals (ESPOperation.DELETE_PROCESS, task.getOperation ());
+  }
+
+  @Test
+  public void readTaskCustomScheme () throws Exception
+  {
+    final SPTask task = SPReader.readTask (TestFiles.SAMPLE_TASK_CUSTOM_SCHEME_PATH);
+    assertNotNull (task);
+    assertEquals ("my-docid-scheme", task.getPaths ().getServiceMetadata ().get (0).getDocumentIdentifierScheme ());
+    assertEquals ("my-procid-scheme", task.getPaths ().getServiceMetadata ().get (0).getProcessIdentifierScheme ());
   }
 
   @Test

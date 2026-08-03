@@ -18,35 +18,66 @@ package com.helger.smpmate.args;
 
 import javax.annotation.Nullable;
 
-public class SPArgServiceMetadata
+public final class SPArgServiceMetadata
 {
   private final String m_sTemplate;
+  private final String m_sDocumentIdentifierScheme;
   private final String m_sDocumentIdentifier;
+  private final String m_sProcessIdentifierScheme;
   private final String m_sProcessIdentifier;
 
   public SPArgServiceMetadata (@Nullable final String sTemplate,
                                @Nullable final String sDocumentTypeIdentifier,
                                @Nullable final String sProcessIdentifier)
   {
+    this (sTemplate, null, sDocumentTypeIdentifier, null, sProcessIdentifier);
+  }
+
+  public SPArgServiceMetadata (@Nullable final String sTemplate,
+                               @Nullable final String sDocumentIdentifierScheme,
+                               @Nullable final String sDocumentTypeIdentifier,
+                               @Nullable final String sProcessIdentifierScheme,
+                               @Nullable final String sProcessIdentifier)
+  {
     m_sTemplate = sTemplate;
     m_sDocumentIdentifier = sDocumentTypeIdentifier;
+    m_sDocumentIdentifierScheme = sDocumentIdentifierScheme;
     m_sProcessIdentifier = sProcessIdentifier;
+    m_sProcessIdentifierScheme = sProcessIdentifierScheme;
   }
 
   @Nullable
-  public final String getTemplate ()
+  public String getTemplate ()
   {
     return m_sTemplate;
   }
 
+  /**
+   * @return the document identifier scheme or {@code null} if the default should be used.
+   */
   @Nullable
-  public final String getDocumentIdentifier ()
+  public String getDocumentIdentifierScheme ()
+  {
+    return m_sDocumentIdentifierScheme;
+  }
+
+  @Nullable
+  public String getDocumentIdentifier ()
   {
     return m_sDocumentIdentifier;
   }
 
+  /**
+   * @return the process identifier scheme or {@code null} if the default should be used.
+   */
   @Nullable
-  public final String getProcessIdentifier ()
+  public String getProcessIdentifierScheme ()
+  {
+    return m_sProcessIdentifierScheme;
+  }
+
+  @Nullable
+  public String getProcessIdentifier ()
   {
     return m_sProcessIdentifier;
   }

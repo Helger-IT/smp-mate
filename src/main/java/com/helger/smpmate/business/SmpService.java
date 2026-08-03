@@ -55,18 +55,36 @@ public class SmpService
 {
   private static final class Metadata
   {
+    private final String m_sDocumentIdentifierScheme;
     private final String m_sDocumentIdentifier;
+    private final String m_sProcessIdentifierScheme;
     private final String m_sProcessIdentifier;
     // May be null for deletion operations, where no template is needed
     private final String m_sXmlTemplateContent;
 
-    private Metadata (final String sDocumentIdentifier,
+    private Metadata (final String sDocumentIdentifierScheme,
+                      final String sDocumentIdentifier,
+                      final String sProcessIdentifierScheme,
                       final String sProcessIdentifier,
                       final String sXmlTemplate)
     {
+      m_sDocumentIdentifierScheme = sDocumentIdentifierScheme;
       m_sDocumentIdentifier = sDocumentIdentifier;
+      m_sProcessIdentifierScheme = sProcessIdentifierScheme;
       m_sProcessIdentifier = sProcessIdentifier;
       m_sXmlTemplateContent = sXmlTemplate;
+    }
+
+    @Nonnull
+    private String getDocumentTypeUrlPart ()
+    {
+      return m_sDocumentIdentifierScheme + SCHEME_SEPARATOR + m_sDocumentIdentifier;
+    }
+
+    @Nonnull
+    private String getProcessUrlPart ()
+    {
+      return m_sProcessIdentifierScheme + SCHEME_SEPARATOR + m_sProcessIdentifier;
     }
   }
 
@@ -80,8 +98,7 @@ public class SmpService
   private static final String PARAM_PROCESS_IDENTIFIER = "${ProcessIdentifier}";
   private static final String ISO_6523_ACTORID_UPIS = "iso6523-actorid-upis::";
   private static final String SERVICES = "services";
-  private static final String BUSDOX_DOCID_QNS = "busdox-docid-qns::";
-  private static final String CENBII_PROCID_UBL = "cenbii-procid-ubl::";
+  private static final String SCHEME_SEPARATOR = "::";
 
   private final String m_sServerUrl;
   private final String m_sAuthEncoded;
@@ -102,7 +119,9 @@ public class SmpService
     final List <Metadata> ret = new ArrayList <> ();
     for (final SPServiceMetadata aMD : aMetadatas)
     {
-      ret.add (new Metadata (aMD.getDocumentIdentifier (),
+      ret.add (new Metadata (aMD.getDocumentIdentifierScheme (),
+                             aMD.getDocumentIdentifier (),
+                             aMD.getProcessIdentifierScheme (),
                              aMD.getProcessIdentifier (),
                              _readFileUTF8 (aMD.getTemplate ()).replace (PARAM_DOCUMENT_IDENTIFIER,
                                                                          aMD.getDocumentIdentifier ())
@@ -119,7 +138,11 @@ public class SmpService
     // XML template files need to be present on disk
     final List <Metadata> ret = new ArrayList <> ();
     for (final SPServiceMetadata aMD : aMetadatas)
-      ret.add (new Metadata (aMD.getDocumentIdentifier (), aMD.getProcessIdentifier (), null));
+      ret.add (new Metadata (aMD.getDocumentIdentifierScheme (),
+                             aMD.getDocumentIdentifier (),
+                             aMD.getProcessIdentifierScheme (),
+                             aMD.getProcessIdentifier (),
+                             null));
     return Collections.unmodifiableList (ret);
   }
 
@@ -262,7 +285,7 @@ public class SmpService
     final URL aUrl = _url (m_sServerUrl,
                            ISO_6523_ACTORID_UPIS + sParticipantID,
                            SERVICES,
-                           BUSDOX_DOCID_QNS + aMetadata.m_sDocumentIdentifier);
+                           aMetadata.getDocumentTypeUrlPart ());
 
     final String sBody = aMetadata.m_sXmlTemplateContent.replace (PARAM_PARTICIPANT_IDENTIFIER, sParticipantID);
     MyLog.info ( () -> "[SMP] Trying to add document type " +
@@ -304,8 +327,8 @@ public class SmpService
     final URL aUrl = _url (m_sServerUrl,
                            ISO_6523_ACTORID_UPIS + sParticipantID,
                            SERVICES,
-                           BUSDOX_DOCID_QNS + aMetadata.m_sDocumentIdentifier,
-                           CENBII_PROCID_UBL + aMetadata.m_sProcessIdentifier);
+                           aMetadata.getDocumentTypeUrlPart (),
+                           aMetadata.getProcessUrlPart ());
     MyLog.info ( () -> "[SMP] Trying to delete process " +
                        aMetadata.m_sProcessIdentifier +
                        " of document type " +
@@ -339,7 +362,7 @@ public class SmpService
     final URL aUrl = _url (m_sServerUrl,
                            ISO_6523_ACTORID_UPIS + sParticipantID,
                            SERVICES,
-                           BUSDOX_DOCID_QNS + aMetadata.m_sDocumentIdentifier);
+                           aMetadata.getDocumentTypeUrlPart ());
     MyLog.info ( () -> "[SMP] Trying to delete document type " +
                        aMetadata.m_sDocumentIdentifier +
                        " from participant " +
