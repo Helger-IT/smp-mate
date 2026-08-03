@@ -104,3 +104,8 @@ Voraussetzungen: Java 1.8 oder höher, Apache Maven 3.x
 Befehl: `mvn clean install`
 
 Das Ergebnis ist die Datei `target/smp-mate-x.y.z-SNAPSHOT-app.jar` wobei `x.y.z` für die Versionsnummer steht.
+
+# News and noteworthy
+
+* v1.0.2 - work in progress
+    * Das optionale Feld `operation` wurde zur Task-Datei hinzugefügt, um das Löschen zu unterstützen. Mögliche Werte sind `ADD` (Standard, bisheriges Verhalten), `DELETE_PROCESS`, `DELETE_DOCTYPE` und `DELETE_PARTICIPANT`. `DELETE_PROCESS` verwendet die phoss SMP REST-API `DELETE /{sg}/services/{doctype}/{process}` (siehe phoss SMP #491, benötigt phoss SMP v8.1.8 oder neuer). Die Lösch-Operationen benötigen die XML-Template-Dateien nicht - es werden nur `documentIdentifier` und `processIdentifier` verwendet. Siehe [#7](https://github.com/Helger-IT/smp-mate/issues/7).

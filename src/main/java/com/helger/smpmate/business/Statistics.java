@@ -34,6 +34,8 @@ public final class Statistics
   private int m_nAddedToSMP;
   private int m_nRegisterUserFailed;
   private int m_aAddDocumentIdFailed;
+  private int m_nDeletedFromSMP;
+  private int m_nDeleteFailed;
 
   private int businessCardSuccessCount;
   private int businessCardFailCount;
@@ -80,6 +82,22 @@ public final class Statistics
   }
 
   /**
+   * Increments the "deletedFromSMP" counter.
+   */
+  public void incDeleteFromSMP ()
+  {
+    m_nDeletedFromSMP++;
+  }
+
+  /**
+   * Increments the "deleteFailed" counter.
+   */
+  public void addDeleteFailed ()
+  {
+    m_nDeleteFailed++;
+  }
+
+  /**
    * Adds an entry to the "smpFails" list.
    */
   public void addSmpFail (@Nonnull final String sParticipantID)
@@ -107,14 +125,18 @@ public final class Statistics
            m_nAddedToSMP +
            "\n  registered business cards ..: " +
            businessCardSuccessCount +
+           "\n  deleted from SMP ...........: " +
+           m_nDeletedFromSMP +
            "\n  SMP: registerUser failed ...: " +
            m_nRegisterUserFailed +
            "\n  SMP: addDocumentId failed ..: " +
            m_aAddDocumentIdFailed +
            "\n  SMP: business card failed ..: " +
            businessCardFailCount +
+           "\n  SMP: delete failed .........: " +
+           m_nDeleteFailed +
            "\n  SMP: total failed ..........: " +
-           (m_nRegisterUserFailed + m_aAddDocumentIdFailed + businessCardFailCount) +
+           (m_nRegisterUserFailed + m_aAddDocumentIdFailed + businessCardFailCount + m_nDeleteFailed) +
            "\n";
   }
 }

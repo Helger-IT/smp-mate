@@ -33,23 +33,37 @@ public final class SPArgTask
   private final SPArgSMP m_aSmp;
   private final SPArgProxy m_aProxy;
   private final EnumSet <ESPArgOption> m_aOptions;
+  private final ESPOperation m_eOperation;
 
-  /**
-   * Initializes a new instance by its properties.
+  /*
+   * Initializes a new instance by its properties, defaulting to operation {@link ESPOperation#ADD}.
    */
   public SPArgTask (final SPArgPaths aPaths,
                     final SPArgSMP aSmp,
                     @Nullable final SPArgProxy aProxy,
                     @Nullable final EnumSet <ESPArgOption> aOptions)
   {
+    this (aPaths, aSmp, aProxy, aOptions, null);
+  }
+
+  /*
+   * Initializes a new instance by its properties.
+   */
+  public SPArgTask (final SPArgPaths aPaths,
+                    final SPArgSMP aSmp,
+                    @Nullable final SPArgProxy aProxy,
+                    @Nullable final EnumSet <ESPArgOption> aOptions,
+                    @Nullable final ESPOperation eOperation)
+  {
     m_aPaths = aPaths;
     m_aSmp = aSmp;
     m_aProxy = aProxy;
     m_aOptions = aOptions != null && !aOptions.isEmpty () ? EnumSet.copyOf (aOptions) : EMPTY_OPTIONS;
+    m_eOperation = eOperation;
   }
 
   /**
-   * Retrieves the paths for this task
+   * @return the paths for this task
    */
   public SPArgPaths getPaths ()
   {
@@ -57,7 +71,7 @@ public final class SPArgTask
   }
 
   /**
-   * Retrieves the SMP configuration for this task
+   * @return the SMP configuration for this task
    */
   public SPArgSMP getSmp ()
   {
@@ -65,7 +79,7 @@ public final class SPArgTask
   }
 
   /**
-   * Retrieves the proxy configuration for this task or {@code null}
+   * @return the proxy configuration for this task or {@code null}
    */
   @Nullable
   public SPArgProxy getProxy ()
@@ -74,11 +88,20 @@ public final class SPArgTask
   }
 
   /**
-   * Retrieves the options for this task. Never <code>null</code>.
+   * @return the options for this task. Never <code>null</code>.
    */
   @Nullable
   public EnumSet <ESPArgOption> getOptions ()
   {
     return m_aOptions;
+  }
+
+  /**
+   * @return the operation for this task or {@code null} if none was specified.
+   */
+  @Nullable
+  public ESPOperation getOperation ()
+  {
+    return m_eOperation;
   }
 }

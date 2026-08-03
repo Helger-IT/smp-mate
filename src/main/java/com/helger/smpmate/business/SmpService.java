@@ -37,6 +37,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.Nonnull;
 
+import com.helger.smpmate.args.ESPOperation;
 import com.helger.smpmate.args.SPArgAuthority;
 import com.helger.smpmate.args.SPArgProxy;
 import com.helger.smpmate.args.SPArgSMP;
@@ -54,13 +55,18 @@ public class SmpService
 {
   private static final class Metadata
   {
-    private final String m_sXmlTemplateContent;
     private final String m_sDocumentIdentifier;
+    private final String m_sProcessIdentifier;
+    // May be null for deletion operations, where no template is needed
+    private final String m_sXmlTemplateContent;
 
-    private Metadata (final String sXmlTemplate, final String sDocumentIdentifier)
+    private Metadata (final String sDocumentIdentifier,
+                      final String sProcessIdentifier,
+                      final String sXmlTemplate)
     {
-      m_sXmlTemplateContent = sXmlTemplate;
       m_sDocumentIdentifier = sDocumentIdentifier;
+      m_sProcessIdentifier = sProcessIdentifier;
+      m_sXmlTemplateContent = sXmlTemplate;
     }
   }
 
@@ -75,6 +81,7 @@ public class SmpService
   private static final String ISO_6523_ACTORID_UPIS = "iso6523-actorid-upis::";
   private static final String SERVICES = "services";
   private static final String BUSDOX_DOCID_QNS = "busdox-docid-qns::";
+  private static final String CENBII_PROCID_UBL = "cenbii-procid-ubl::";
 
   private final String m_sServerUrl;
   private final String m_sAuthEncoded;
@@ -95,12 +102,24 @@ public class SmpService
     final List <Metadata> ret = new ArrayList <> ();
     for (final SPServiceMetadata aMD : aMetadatas)
     {
-      ret.add (new Metadata (_readFileUTF8 (aMD.getTemplate ()).replace (PARAM_DOCUMENT_IDENTIFIER,
+      ret.add (new Metadata (aMD.getDocumentIdentifier (),
+                             aMD.getProcessIdentifier (),
+                             _readFileUTF8 (aMD.getTemplate ()).replace (PARAM_DOCUMENT_IDENTIFIER,
                                                                          aMD.getDocumentIdentifier ())
                                                                .replace (PARAM_PROCESS_IDENTIFIER,
-                                                                         aMD.getProcessIdentifier ()),
-                             aMD.getDocumentIdentifier ()));
+                                                                         aMD.getProcessIdentifier ())));
     }
+    return Collections.unmodifiableList (ret);
+  }
+
+  @Nonnull
+  private static List <Metadata> _readIds (@Nonnull final Iterable <? extends SPServiceMetadata> aMetadatas)
+  {
+    // Deletion operations only need the document and process identifiers - no
+    // XML template files need to be present on disk
+    final List <Metadata> ret = new ArrayList <> ();
+    for (final SPServiceMetadata aMD : aMetadatas)
+      ret.add (new Metadata (aMD.getDocumentIdentifier (), aMD.getProcessIdentifier (), null));
     return Collections.unmodifiableList (ret);
   }
 
@@ -114,8 +133,17 @@ public class SmpService
     m_sServerUrl = aSmp.getUrl ();
     m_sAuthEncoded = aSmp.getAuthority () == null ? null : _basicAuthEncoded (aSmp.getAuthority ());
     final SPPaths paths = aTask.getPaths ();
-    m_sServiceGroupTemplate = _readFileUTF8 (paths.getServiceGroupTemplate ());
-    m_aServiceMetadata = _readAll (paths.getServiceMetadata ());
+    if (aTask.getOperation () == ESPOperation.ADD)
+    {
+      // Only the "add" operation needs the XML templates on disk
+      m_sServiceGroupTemplate = _readFileUTF8 (paths.getServiceGroupTemplate ());
+      m_aServiceMetadata = _readAll (paths.getServiceMetadata ());
+    }
+    else
+    {
+      m_sServiceGroupTemplate = null;
+      m_aServiceMetadata = _readIds (paths.getServiceMetadata ());
+    }
 
     MyLog.info ( () -> "Connecting to SMP on " + m_sServerUrl);
     if (m_sAuthEncoded == null)
@@ -248,6 +276,76 @@ public class SmpService
     {
       aWriter.write (sBody);
     }
+    return aHttpCon.getResponseCode ();
+  }
+
+  /**
+   * Deletes a single process (incl. all its endpoints) of each configured
+   * document type from a registered "user" ("participant"), without touching
+   * other processes of the same document type. Uses the phoss SMP REST API
+   * <code>DELETE /{ServiceGroupId}/services/{DocumentTypeId}/{ProcessId}</code>
+   * (see https://github.com/phax/phoss-smp/discussions/491, since phoss SMP
+   * v8.1.8).
+   */
+  @Nonnull
+  public final List <Integer> deleteProcesses (@Nonnull final String sParticipantId) throws IOException
+  {
+    // List of HTTP status codes
+    final List <Integer> ret = new LinkedList <> ();
+    for (final Metadata aMetadata : m_aServiceMetadata)
+      ret.add (Integer.valueOf (_deleteProcess (sParticipantId, aMetadata)));
+    return ret;
+  }
+
+  private int _deleteProcess (@Nonnull final String sParticipantID, @Nonnull final Metadata aMetadata)
+                                                                                                       throws IOException
+  {
+    _configureProxy ();
+    final URL aUrl = _url (m_sServerUrl,
+                           ISO_6523_ACTORID_UPIS + sParticipantID,
+                           SERVICES,
+                           BUSDOX_DOCID_QNS + aMetadata.m_sDocumentIdentifier,
+                           CENBII_PROCID_UBL + aMetadata.m_sProcessIdentifier);
+    MyLog.info ( () -> "[SMP] Trying to delete process " +
+                       aMetadata.m_sProcessIdentifier +
+                       " of document type " +
+                       aMetadata.m_sDocumentIdentifier +
+                       " from participant " +
+                       sParticipantID);
+
+    final HttpURLConnection aHttpCon = _openConnection (aUrl, "DELETE");
+    return aHttpCon.getResponseCode ();
+  }
+
+  /**
+   * Deletes the whole service metadata of each configured document type from a
+   * registered "user" ("participant"). Uses the phoss SMP REST API
+   * <code>DELETE /{ServiceGroupId}/services/{DocumentTypeId}</code>.
+   */
+  @Nonnull
+  public final List <Integer> deleteDocumentTypeIDs (@Nonnull final String sParticipantId) throws IOException
+  {
+    // List of HTTP status codes
+    final List <Integer> ret = new LinkedList <> ();
+    for (final Metadata aMetadata : m_aServiceMetadata)
+      ret.add (Integer.valueOf (_deleteDocumentTypeID (sParticipantId, aMetadata)));
+    return ret;
+  }
+
+  private int _deleteDocumentTypeID (@Nonnull final String sParticipantID, @Nonnull final Metadata aMetadata)
+                                                                                                             throws IOException
+  {
+    _configureProxy ();
+    final URL aUrl = _url (m_sServerUrl,
+                           ISO_6523_ACTORID_UPIS + sParticipantID,
+                           SERVICES,
+                           BUSDOX_DOCID_QNS + aMetadata.m_sDocumentIdentifier);
+    MyLog.info ( () -> "[SMP] Trying to delete document type " +
+                       aMetadata.m_sDocumentIdentifier +
+                       " from participant " +
+                       sParticipantID);
+
+    final HttpURLConnection aHttpCon = _openConnection (aUrl, "DELETE");
     return aHttpCon.getResponseCode ();
   }
 

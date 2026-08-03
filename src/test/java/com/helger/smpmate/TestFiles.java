@@ -28,6 +28,7 @@ public final class TestFiles
   public static final String SAMPLE_TASK_NO_PROXY_RESOURCE = "/sample.task-no-proxy.json";
   public static final String SAMPLE_TASK_WITH_AUTH_RESOURCE = "/sample.task-with-auth.json";
   public static final String SAMPLE_TASK_BC_RESOURCE = "/sample.task-bc.json";
+  public static final String SAMPLE_TASK_DELETE_PROCESS_RESOURCE = "/sample.task-delete-process.json";
 
   public static final Path TEST_PATH = Paths.get ("target", "testing", TestFiles.class.getCanonicalName ())
                                             .toAbsolutePath ()
@@ -39,6 +40,7 @@ public final class TestFiles
   public static final Path SAMPLE_TASK_NO_PROXY_PATH = TEST_PATH.resolve ("task5.json");
   public static final Path SAMPLE_TASK_WITH_AUTH_PATH = TEST_PATH.resolve ("task6.json");
   public static final Path SAMPLE_TASK_BC_PATH = TEST_PATH.resolve ("task7.json");
+  public static final Path SAMPLE_TASK_DELETE_PROCESS_PATH = TEST_PATH.resolve ("task8.json");
 
   private TestFiles ()
   {}

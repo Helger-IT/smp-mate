@@ -30,6 +30,7 @@ import org.junit.Test;
 
 import com.helger.smpmate.TestFiles;
 import com.helger.smpmate.args.ESPArgOption;
+import com.helger.smpmate.args.ESPOperation;
 import com.helger.smpmate.args.SPArgAuthority;
 import com.helger.smpmate.args.SPArgProxy;
 import com.helger.smpmate.args.SPArgSMP;
@@ -46,7 +47,8 @@ public final class SPReaderTest
                  .copy (TestFiles.SAMPLE_TASK_DRY_RUN_RESOURCE, TestFiles.SAMPLE_TASK_DRY_RUN_PATH)
                  .copy (TestFiles.SAMPLE_TASK_NO_OPTIONS_RESOURCE, TestFiles.SAMPLE_TASK_NO_OPTIONS_PATH)
                  .copy (TestFiles.SAMPLE_TASK_NO_PROXY_RESOURCE, TestFiles.SAMPLE_TASK_NO_PROXY_PATH)
-                 .copy (TestFiles.SAMPLE_TASK_WITH_AUTH_RESOURCE, TestFiles.SAMPLE_TASK_WITH_AUTH_PATH);
+                 .copy (TestFiles.SAMPLE_TASK_WITH_AUTH_RESOURCE, TestFiles.SAMPLE_TASK_WITH_AUTH_PATH)
+                 .copy (TestFiles.SAMPLE_TASK_DELETE_PROCESS_RESOURCE, TestFiles.SAMPLE_TASK_DELETE_PROCESS_PATH);
   }
 
   private static void _assertTask (@Nonnull final SPTask aTask)
@@ -86,6 +88,8 @@ public final class SPReaderTest
     final SPTask task = SPReader.readTask (TestFiles.SAMPLE_TASK_PATH);
     _assertTask (task);
     assertEquals (task.getOptions (), EnumSet.noneOf (ESPArgOption.class));
+    // No "operation" in JSON -> defaults to ADD
+    assertEquals (ESPOperation.ADD, task.getOperation ());
 
     if (false)
     {
@@ -93,6 +97,14 @@ public final class SPReaderTest
       _assertProxy (proxy);
       assertNull (proxy.getAuthority ());
     }
+  }
+
+  @Test
+  public void readTaskDeleteProcess () throws Exception
+  {
+    final SPTask task = SPReader.readTask (TestFiles.SAMPLE_TASK_DELETE_PROCESS_PATH);
+    _assertTask (task);
+    assertEquals (ESPOperation.DELETE_PROCESS, task.getOperation ());
   }
 
   @Test

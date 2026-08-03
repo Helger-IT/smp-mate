@@ -80,4 +80,16 @@ public final class SmpServiceTest
     assertEquals (Collections.singletonList (Integer.valueOf (HTTP_OK)), service.addDocumentTypeIDs (userId));
     assertEquals (HTTP_OK, service.deleteParticipant (userId));
   }
+
+  @Test
+  @Ignore ("This test fails, except a real SMP is configured")
+  public void deleteProcess () throws Exception
+  {
+    final String userId = "9930:de888111129";
+    final SmpService service = new SmpService (TASK);
+    // Delete only the configured process(es) - phoss SMP #491 API
+    assertEquals (Collections.singletonList (Integer.valueOf (HTTP_OK)), service.deleteProcesses (userId));
+    // Delete the whole document type(s)
+    assertEquals (Collections.singletonList (Integer.valueOf (HTTP_OK)), service.deleteDocumentTypeIDs (userId));
+  }
 }

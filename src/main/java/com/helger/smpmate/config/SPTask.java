@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.smpmate.args.ESPArgOption;
+import com.helger.smpmate.args.ESPOperation;
 import com.helger.smpmate.args.SPArgProxy;
 import com.helger.smpmate.args.SPArgSMP;
 import com.helger.smpmate.args.SPArgTask;
@@ -41,6 +42,7 @@ public final class SPTask
   private final SPArgSMP m_aSmp;
   private final SPArgProxy m_aProxy;
   private final EnumSet <ESPArgOption> m_aOptions;
+  private final ESPOperation m_eOperation;
 
   /*
    * Initializes a task configuration.
@@ -52,10 +54,11 @@ public final class SPTask
     m_aProxy = aOrigin.getProxy ();
     m_aOptions = aOrigin.getOptions () == null ? EnumSet.noneOf (ESPArgOption.class) : EnumSet.copyOf (aOrigin
                                                                                                               .getOptions ());
+    m_eOperation = aOrigin.getOperation () == null ? ESPOperation.ADD : aOrigin.getOperation ();
   }
 
   /**
-   * Retrieves the paths for this task
+   * @return the paths for this task
    */
   @Nonnull
   public SPPaths getPaths ()
@@ -64,7 +67,7 @@ public final class SPTask
   }
 
   /**
-   * Retrieves the SMP configuration for this task
+   * @return the SMP configuration for this task
    */
   public SPArgSMP getSmp ()
   {
@@ -72,7 +75,7 @@ public final class SPTask
   }
 
   /**
-   * Retrieves the proxy configuration for this task
+   * @return the proxy configuration for this task
    */
   @Nullable
   public SPArgProxy getProxy ()
@@ -81,11 +84,21 @@ public final class SPTask
   }
 
   /**
-   * Retrieves the options for this task
+   * @return the options for this task
    */
   @Nonnull
   public Set <ESPArgOption> getOptions ()
   {
     return Collections.unmodifiableSet (m_aOptions);
+  }
+
+  /**
+   * @return the operation for this task. Never <code>null</code>, defaults to
+   *         {@link ESPOperation#ADD}.
+   */
+  @Nonnull
+  public ESPOperation getOperation ()
+  {
+    return m_eOperation;
   }
 }

@@ -56,4 +56,16 @@
   "options": [
     "DRY_RUN"
   ]
+
+  // Operation, optional. Mögliche Werte: "ADD" (Standard), "DELETE_PROCESS", "DELETE_DOCTYPE", "DELETE_PARTICIPANT"
+  // * "ADD" ...............: legt Teilnehmer inkl. deren Dokumenttypen und Business Cards an bzw. aktualisiert sie (Standard)
+  // * "DELETE_PROCESS" ....: löscht je Teilnehmer den/die oben konfigurierten Prozess(e) des/der Dokumenttyps/-typen
+  //                          (phoss SMP DELETE /{sg}/services/{doctype}/{process}, benötigt phoss SMP v8.1.8 oder neuer)
+  // * "DELETE_DOCTYPE" ....: löscht je Teilnehmer die gesamten Service-Metadaten des/der oben konfigurierten Dokumenttyps/-typen
+  //                          (phoss SMP DELETE /{sg}/services/{doctype})
+  // * "DELETE_PARTICIPANT" : löscht je Teilnehmer den kompletten Teilnehmer inkl. aller Dokumenttypen
+  //                          (phoss SMP DELETE /{sg})
+  // * Hinweis: Bei den DELETE-Operationen werden die "template"-XML-Dateien nicht benötigt; verwendet werden nur
+  //   "documentIdentifier" und "processIdentifier" aus dem Abschnitt "serviceMetadata".
+  // "operation": "ADD"
 }
