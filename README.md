@@ -128,3 +128,10 @@ v1.0.2 - 2026-08-03
 * Die Identifier-Schemes sind jetzt je `serviceMetadata`-Eintrag über die optionalen Felder `documentIdentifierScheme` (Standard `busdox-docid-qns`) und `processIdentifierScheme` (Standard `cenbii-procid-ubl`) konfigurierbar.
   Ohne Angabe gelten die bisherigen Standardwerte, sodass bestehende Konfigurationen unverändert weiterlaufen.
   Siehe [#8](https://github.com/Helger-IT/smp-mate/issues/8).
+
+v1.0.1 - 2024-02-15
+* Unterstützung für Business Cards je Participant wurde hinzugefügt. Über das optionale Feld `BusinessCardPath` in der CSV-Datei kann je Participant eine BusinessCard-XML-Datei referenziert werden.
+  Das passende XML Schema befindet sich unter https://docs.peppol.eu/edelivery/directory/peppol-directory-business-card-20180621.xsd
+
+v1.0.0 - 2022-10-12
+* Erste Veröffentlichung von SMP Mate (ehemals SMP Provisioning Tool).
