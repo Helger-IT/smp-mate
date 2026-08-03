@@ -58,8 +58,10 @@ Pfade zu Input-Dateien definiert, die zur Ausführungszeit vorhanden sein müsse
 * **`serviceGroupTemplate`**: Der Name der Variable `serviceGroupTemplate` darf nicht geändert werden und definiert Pfad und Dateiname einer Datei die die Vorlage für eine SMP "ServiceGroup" enthält. Der Default-Wert sollte nicht angepasst werden.
 * **`serviceMetadata`**: Der Name der Variable `serviceMetadata` darf nicht geändert werden und definiert Pfade und Dateinamen als Vorlage einer oder mehrerer XML-Strukturen sowie der Identifikatoren für Dokumenttyp und Prozess, so, wie sie an den SMP-Server übermittelt werden sollen, beispielsweise `[ { "template": "ServiceMetadata.xml", "documentIdentifier": "urn:oasis:names:specification:ubl:schema:xsd:Tender-2::Tender##urn:www.cenbii.eu:transaction:biitrdm090:ver3.0::2.1", "processIdentifier": "urn:www.cenbii.eu:profile:bii54:ver3.0" } ]`
     * **`template`**: Der Pfad und Dateiname zur verwendeten XML-Vorlage
-    * **`documentIdentifier`**: Der zu verwendende Peppol Dokumenttypidentifikator. Das zu verwendenden Identifikatorenschema steht in der XML-Vorlage drin. 
-    * **`processIdentifier`**: Der zu verwendende Peppol Prozessidentifikator. Das zu verwendenden Identifikatorenschema steht in der XML-Vorlage drin.
+    * **`documentIdentifier`**: Der zu verwendende Peppol Dokumenttypidentifikator (ohne Schema-Präfix). Das für die SMP-REST-URL verwendete Schema wird über `documentIdentifierScheme` bestimmt.
+    * **`documentIdentifierScheme`** (seit v1.0.2, optional): Das für die SMP-REST-URL verwendete Schema des Dokumenttypidentifikators. Standardwert ist `busdox-docid-qns`; nur anzupassen, wenn ein abweichendes Schema benötigt wird. Ohne Angabe bleibt das bisherige Verhalten unverändert.
+    * **`processIdentifier`**: Der zu verwendende Peppol Prozessidentifikator (ohne Schema-Präfix). Das für die SMP-REST-URL verwendete Schema wird über `processIdentifierScheme` bestimmt.
+    * **`processIdentifierScheme`** (seit v1.0.2, optional): Das für die SMP-REST-URL verwendete Schema des Prozessidentifikators. Standardwert ist `cenbii-procid-ubl`; nur anzupassen, wenn ein abweichendes Schema benötigt wird. Ohne Angabe bleibt das bisherige Verhalten unverändert.
 
 ### Der Abschnitt "SMP-Konfiguration" in der JSON-Datei
 
@@ -77,6 +79,17 @@ Zurzeit steht genau eine Option zur Verfügung.
 Die Option `DRY_RUN` sorgt dafür, dass ein Programdurchlauf ausgeführt werden kann, bei dem keine Daten an den SMP-Server übermittelt werden.
 Damit kann die Ausführbarkeit des Programms mit seinen aktuellen Parametern getestet werden.
 Wenn Ein- und Ausgabedatei mit dem gleichen Pfad/Dateinamen definiert sind, wird diese Datei auch im Modus `DRY_RUN` überschrieben.
+
+### Der Abschnitt "Operation" in der JSON-Datei (seit v1.0.2)
+
+Das optionale Feld `operation` legt fest, welche Aktion je Participant ausgeführt wird. Wird das Feld weggelassen, gilt `ADD` und damit das bisherige Verhalten.
+
+* **`ADD`** (Standard): Legt Participants inkl. deren Dokumenttypen und Business Cards an bzw. aktualisiert sie.
+* **`DELETE_PROCESS`**: Löscht je Participant den/die in `serviceMetadata` konfigurierten Prozess(e) des jeweiligen Dokumenttyps (phoss SMP REST-API `DELETE /{sg}/services/{doctype}/{process}`, benötigt phoss SMP v8.1.8 oder neuer).
+* **`DELETE_DOCTYPE`**: Löscht je Participant die gesamten Service-Metadaten des/der konfigurierten Dokumenttyps/-typen (phoss SMP REST-API `DELETE /{sg}/services/{doctype}`).
+* **`DELETE_PARTICIPANT`**: Löscht je Participant den kompletten Participant inkl. aller Dokumenttypen (phoss SMP REST-API `DELETE /{sg}`).
+
+Hinweis: Bei den DELETE-Operationen werden die XML-Vorlagen (`template`) nicht benötigt; verwendet werden nur die Identifikatoren und Schemata aus dem Abschnitt `serviceMetadata`.
 
 # Ausführen von SMP Mate
 
@@ -107,6 +120,11 @@ Das Ergebnis ist die Datei `target/smp-mate-x.y.z-SNAPSHOT-app.jar` wobei `x.y.z
 
 # News and noteworthy
 
-* v1.0.2 - work in progress
-    * Das optionale Feld `operation` wurde zur Task-Datei hinzugefügt, um das Löschen zu unterstützen. Mögliche Werte sind `ADD` (Standard, bisheriges Verhalten), `DELETE_PROCESS`, `DELETE_DOCTYPE` und `DELETE_PARTICIPANT`. `DELETE_PROCESS` verwendet die phoss SMP REST-API `DELETE /{sg}/services/{doctype}/{process}` (siehe phoss SMP #491, benötigt phoss SMP v8.1.8 oder neuer). Die Lösch-Operationen benötigen die XML-Template-Dateien nicht - es werden nur `documentIdentifier` und `processIdentifier` verwendet. Siehe [#7](https://github.com/Helger-IT/smp-mate/issues/7).
-    * Die Identifier-Schemes sind jetzt je `serviceMetadata`-Eintrag über die optionalen Felder `documentIdentifierScheme` (Standard `busdox-docid-qns`) und `processIdentifierScheme` (Standard `cenbii-procid-ubl`) konfigurierbar. Ohne Angabe gelten die bisherigen Standardwerte, sodass bestehende Konfigurationen unverändert weiterlaufen. Siehe [#8](https://github.com/Helger-IT/smp-mate/issues/8).
+v1.0.2 - 2026-08-03
+* Das optionale Feld `operation` wurde zur Task-Datei hinzugefügt, um das Löschen zu unterstützen.
+  Mögliche Werte sind `ADD` (Standard, bisheriges Verhalten), `DELETE_PROCESS`, `DELETE_DOCTYPE` und `DELETE_PARTICIPANT`. `DELETE_PROCESS` verwendet die phoss SMP REST-API `DELETE /{sg}/services/{doctype}/{process}` (siehe phoss SMP #491, benötigt phoss SMP v8.1.8 oder neuer).
+  Die Lösch-Operationen benötigen die XML-Template-Dateien nicht - es werden nur `documentIdentifier` und `processIdentifier` verwendet.
+  Siehe [#7](https://github.com/Helger-IT/smp-mate/issues/7).
+* Die Identifier-Schemes sind jetzt je `serviceMetadata`-Eintrag über die optionalen Felder `documentIdentifierScheme` (Standard `busdox-docid-qns`) und `processIdentifierScheme` (Standard `cenbii-procid-ubl`) konfigurierbar.
+  Ohne Angabe gelten die bisherigen Standardwerte, sodass bestehende Konfigurationen unverändert weiterlaufen.
+  Siehe [#8](https://github.com/Helger-IT/smp-mate/issues/8).
