@@ -27,7 +27,7 @@
   </parent>
   <groupId>com.helger.smp-mate</groupId>
   <artifactId>smp-mate</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4-SNAPSHOT</version>
   <name>SMP mate</name>
   <description>SMP MAintenance TEchnology</description>
   <url>https://github.com/phax/ph-sbdh</url>
@@ -45,7 +45,7 @@
     <connection>scm:git:https://github.com/phax/smp-mate.git</connection>
     <developerConnection>scm:git:https://github.com/phax/smp-mate.git</developerConnection>
     <url>https://github.com/phax/smp-mate</url>
-    <tag>smp-mate-1.0.3</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <organization>
