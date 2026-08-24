@@ -120,7 +120,7 @@ Das Ergebnis ist die Datei `target/smp-mate-x.y.z-SNAPSHOT-app.jar` wobei `x.y.z
 
 # News and noteworthy
 
-v1.0.3 - work in progress
+v1.0.3 - 2026-08-24
 * Bei `documentIdentifier`, `documentIdentifierScheme`, `processIdentifier` und `processIdentifierScheme` werden führende und abschließende Leerzeichen jetzt automatisch entfernt.
 * Bei den Participant-IDs aus der CSV-Datei werden führende und abschließende Leerzeichen jetzt automatisch entfernt.
 
