@@ -36,17 +36,30 @@ public final class SPServiceMetadata
   private final String m_sProcessIdentifierScheme;
   private final String m_sProcessIdentifier;
 
+  /**
+   * Removes all leading and trailing whitespaces from the provided value, as they are irrelevant
+   * for identifiers but break the SMP URLs
+   */
+  @Nullable
+  private static String _trimmed (@Nullable final String sValue)
+  {
+    return sValue == null ? null : sValue.trim ();
+  }
+
   public SPServiceMetadata (@Nullable final Path aRel, @Nonnull final SPArgServiceMetadata aOrigin)
   {
     m_aTemplate = SPPaths.toPath (aRel, aOrigin.getTemplate ());
-    m_sDocumentIdentifierScheme = aOrigin.getDocumentIdentifierScheme () == null ? DEFAULT_DOCUMENT_IDENTIFIER_SCHEME
-                                                                                 : aOrigin.getDocumentIdentifierScheme ();
-    m_sDocumentIdentifier = aOrigin.getDocumentIdentifier ();
-    m_sProcessIdentifierScheme = aOrigin.getProcessIdentifierScheme () == null ? DEFAULT_PROCESS_IDENTIFIER_SCHEME
-                                                                               : aOrigin.getProcessIdentifierScheme ();
-    m_sProcessIdentifier = aOrigin.getProcessIdentifier ();
+    final String sDocumentIdentifierScheme = _trimmed (aOrigin.getDocumentIdentifierScheme ());
+    m_sDocumentIdentifierScheme = sDocumentIdentifierScheme == null ? DEFAULT_DOCUMENT_IDENTIFIER_SCHEME
+                                                                    : sDocumentIdentifierScheme.trim ();
+    m_sDocumentIdentifier = _trimmed (aOrigin.getDocumentIdentifier ());
+    final String sProcessIdentifierScheme = _trimmed (aOrigin.getProcessIdentifierScheme ());
+    m_sProcessIdentifierScheme = sProcessIdentifierScheme == null ? DEFAULT_PROCESS_IDENTIFIER_SCHEME
+                                                                  : sProcessIdentifierScheme.trim ();
+    m_sProcessIdentifier = _trimmed (aOrigin.getProcessIdentifier ());
   }
 
+  @Nonnull
   public Path getTemplate ()
   {
     return m_aTemplate;
@@ -62,6 +75,7 @@ public final class SPServiceMetadata
     return m_sDocumentIdentifierScheme;
   }
 
+  @Nullable
   public String getDocumentIdentifier ()
   {
     return m_sDocumentIdentifier;
@@ -77,6 +91,7 @@ public final class SPServiceMetadata
     return m_sProcessIdentifierScheme;
   }
 
+  @Nullable
   public String getProcessIdentifier ()
   {
     return m_sProcessIdentifier;

@@ -49,7 +49,8 @@ public final class SPReaderTest
                  .copy (TestFiles.SAMPLE_TASK_NO_PROXY_RESOURCE, TestFiles.SAMPLE_TASK_NO_PROXY_PATH)
                  .copy (TestFiles.SAMPLE_TASK_WITH_AUTH_RESOURCE, TestFiles.SAMPLE_TASK_WITH_AUTH_PATH)
                  .copy (TestFiles.SAMPLE_TASK_DELETE_PROCESS_RESOURCE, TestFiles.SAMPLE_TASK_DELETE_PROCESS_PATH)
-                 .copy (TestFiles.SAMPLE_TASK_CUSTOM_SCHEME_RESOURCE, TestFiles.SAMPLE_TASK_CUSTOM_SCHEME_PATH);
+                 .copy (TestFiles.SAMPLE_TASK_CUSTOM_SCHEME_RESOURCE, TestFiles.SAMPLE_TASK_CUSTOM_SCHEME_PATH)
+                 .copy (TestFiles.SAMPLE_TASK_WHITESPACE_IDS_RESOURCE, TestFiles.SAMPLE_TASK_WHITESPACE_IDS_PATH);
   }
 
   private static void _assertTask (@Nonnull final SPTask aTask)
@@ -118,6 +119,21 @@ public final class SPReaderTest
     assertNotNull (task);
     assertEquals ("my-docid-scheme", task.getPaths ().getServiceMetadata ().get (0).getDocumentIdentifierScheme ());
     assertEquals ("my-procid-scheme", task.getPaths ().getServiceMetadata ().get (0).getProcessIdentifierScheme ());
+  }
+
+  @Test
+  public void readTaskWhitespaceIds () throws Exception
+  {
+    // All identifiers in the JSON are surrounded by whitespaces
+    final SPTask task = SPReader.readTask (TestFiles.SAMPLE_TASK_WHITESPACE_IDS_PATH);
+    assertNotNull (task);
+
+    final SPServiceMetadata meta = task.getPaths ().getServiceMetadata ().get (0);
+    assertEquals ("urn:oasis:names:specification:ubl:schema:xsd:Tender-2::Tender##urn:www.cenbii.eu:transaction:biitrdm090:ver3.0::2.1",
+                  meta.getDocumentIdentifier ());
+    assertEquals ("my-docid-scheme", meta.getDocumentIdentifierScheme ());
+    assertEquals ("urn:www.cenbii.eu:profile:bii54:ver3.0", meta.getProcessIdentifier ());
+    assertEquals ("my-procid-scheme", meta.getProcessIdentifierScheme ());
   }
 
   @Test

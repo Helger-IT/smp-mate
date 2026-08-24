@@ -120,6 +120,9 @@ Das Ergebnis ist die Datei `target/smp-mate-x.y.z-SNAPSHOT-app.jar` wobei `x.y.z
 
 # News and noteworthy
 
+v1.0.3 - work in progress
+* Bei `documentIdentifier`, `documentIdentifierScheme`, `processIdentifier` und `processIdentifierScheme` werden führende und abschließende Leerzeichen jetzt automatisch entfernt.
+
 v1.0.2 - 2026-08-03
 * Das optionale Feld `operation` wurde zur Task-Datei hinzugefügt, um das Löschen zu unterstützen.
   Mögliche Werte sind `ADD` (Standard, bisheriges Verhalten), `DELETE_PROCESS`, `DELETE_DOCTYPE` und `DELETE_PARTICIPANT`. `DELETE_PROCESS` verwendet die phoss SMP REST-API `DELETE /{sg}/services/{doctype}/{process}` (siehe phoss SMP #491, benötigt phoss SMP v8.1.8 oder neuer).
