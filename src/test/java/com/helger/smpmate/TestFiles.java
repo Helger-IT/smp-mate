@@ -31,6 +31,7 @@ public final class TestFiles
   public static final String SAMPLE_TASK_DELETE_PROCESS_RESOURCE = "/sample.task-delete-process.json";
   public static final String SAMPLE_TASK_CUSTOM_SCHEME_RESOURCE = "/sample.task-custom-scheme.json";
   public static final String SAMPLE_TASK_WHITESPACE_IDS_RESOURCE = "/sample.task-whitespace-ids.json";
+  public static final String SAMPLE_TASK_WHITESPACE_CSV_RESOURCE = "/sample.task-whitespace-csv.json";
 
   public static final Path TEST_PATH = Paths.get ("target", "testing", TestFiles.class.getCanonicalName ())
                                             .toAbsolutePath ()
@@ -45,6 +46,7 @@ public final class TestFiles
   public static final Path SAMPLE_TASK_DELETE_PROCESS_PATH = TEST_PATH.resolve ("task8.json");
   public static final Path SAMPLE_TASK_CUSTOM_SCHEME_PATH = TEST_PATH.resolve ("task9.json");
   public static final Path SAMPLE_TASK_WHITESPACE_IDS_PATH = TEST_PATH.resolve ("task10.json");
+  public static final Path SAMPLE_TASK_WHITESPACE_CSV_PATH = TEST_PATH.resolve ("task11.json");
 
   private TestFiles ()
   {}

@@ -73,7 +73,8 @@ public final class Main
               final Tokenizer tokenizer = new Tokenizer (sCsvLine.trim (), ";");
               final String [] tokens = tokenizer.tokens ();
 
-              final String participantId = tokens.length >= 1 ? tokens[0] : null;
+              // Trim to avoid whitespace in the participant ID
+              final String participantId = tokens.length >= 1 ? tokens[0].trim () : null;
               final Path bcPath = tokens.length >= 2 ? SPPaths.toPath (aTaskPath.getParent (), tokens[1]) : null;
 
               aConfigurator.update (participantId, bcPath);

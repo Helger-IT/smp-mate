@@ -16,10 +16,12 @@
  */
 package com.helger.smpmate;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
@@ -40,6 +42,7 @@ public final class MainTest
   private static final String SAMPLE_CSV_NAME = "/sample.csv";
   private static final String SAMPLE_BC_CSV_NAME = "/sample-bc.csv";
   private static final String SAMPLE_BC_XML_NAME = "/sample-bc.xml";
+  private static final String SAMPLE_WHITESPACE_CSV_NAME = "/sample-whitespace.csv";
   private static final String SERVICE_GROUP_TMPLT_RSRC = "/sample/input/ServiceGroup.xml";
   private static final String SERVICE_META_TMPLT_RSRC = "/sample/input/ServiceMetadata-PEPPOL-cii_invoice.xml";
   private static final MockResources RESOURCES = MockResources.using (MainTest.class);
@@ -47,7 +50,9 @@ public final class MainTest
   private static final Path csvInputPath = TestFiles.TEST_PATH.resolve ("input.csv");
   private static final Path csvBcInputPath = TestFiles.TEST_PATH.resolve ("input-bc.csv");
   private static final Path xmlBcInputPath = TestFiles.TEST_PATH.resolve ("sample-bc.xml");
+  private static final Path csvWhitespaceInputPath = TestFiles.TEST_PATH.resolve ("input-whitespace.csv");
   private static final Path csvOutputPath = TestFiles.TEST_PATH.resolve ("output.csv");
+  private static final Path csvWhitespaceOutputPath = TestFiles.TEST_PATH.resolve ("output-whitespace.csv");
   private static final Path serviceGroupPath = TestFiles.TEST_PATH.resolve ("ServiceGroup.xml");
   private static final Path serviceMetaPath = TestFiles.TEST_PATH.resolve ("ServiceMetadata.xml");
 
@@ -183,6 +188,23 @@ public final class MainTest
 
     final FileTime timeX2 = Files.getLastModifiedTime (csvOutputPath);
     assertTrue ("expected: " + time0 + " <= " + timeX2, time0.compareTo (timeX2) <= 0);
+  }
+
+  @Test
+  public void mainExistingWhitespaceCsv () throws Exception
+  {
+    _prepareInput ();
+    RESOURCES.copy (SAMPLE_WHITESPACE_CSV_NAME, csvWhitespaceInputPath)
+             .copy (TestFiles.SAMPLE_TASK_WHITESPACE_CSV_RESOURCE, TestFiles.SAMPLE_TASK_WHITESPACE_CSV_PATH);
+    Files.deleteIfExists (csvWhitespaceOutputPath);
+
+    // The participant IDs in the CSV are surrounded by whitespaces.
+    // Invalid SMP path -> all participants fail and are written to the fail CSV
+    Main.main (TestFiles.SAMPLE_TASK_WHITESPACE_CSV_PATH.toString ());
+
+    assertTrue ("should exist: " + csvWhitespaceOutputPath, Files.exists (csvWhitespaceOutputPath));
+    assertEquals (Arrays.asList ("9930:de999111111", "9930:de999111112"),
+                  Files.readAllLines (csvWhitespaceOutputPath, StandardCharsets.UTF_8));
   }
 
   @Test

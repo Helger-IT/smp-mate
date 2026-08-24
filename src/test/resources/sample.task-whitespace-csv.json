@@ -1,0 +1,22 @@
+{
+  "paths": {
+    "csvInput": "input-whitespace.csv",
+    "csvFailOutput": "output-whitespace.csv",
+    "serviceGroupTemplate": "ServiceGroup.xml",
+    "serviceMetadata": [
+      {
+        "template": "ServiceMetadata.xml",
+        "documentIdentifier": "urn:oasis:names:specification:ubl:schema:xsd:Tender-2::Tender##urn:www.cenbii.eu:transaction:biitrdm090:ver3.0::2.1",
+        "processIdentifier": "urn:www.cenbii.eu:profile:bii54:ver3.0"
+      }
+    ]
+  },
+  "smp": {
+    "url": "http://nosmp.nowhere.tld/",
+    "authority": {
+      "name": "anyone",
+      "password": "anything"
+    }
+  },
+  "options": []
+}
