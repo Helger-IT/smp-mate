@@ -168,9 +168,9 @@ public class SmpService
       m_aServiceMetadata = _readIds (paths.getServiceMetadata ());
     }
 
-    MyLog.info ( () -> "Connecting to SMP on " + m_sServerUrl);
+    MyLog.info (() -> "Connecting to SMP on " + m_sServerUrl);
     if (m_sAuthEncoded == null)
-      MyLog.warning ( () -> "Connecting to SMP without authorization");
+      MyLog.warning (() -> "Connecting to SMP without authorization");
   }
 
   @Nonnull
@@ -229,15 +229,15 @@ public class SmpService
   }
 
   /**
-   * Registers a "user" ("participant") on the associated SMP server using a
-   * "ServiceGroup" structure.
+   * Registers a "user" ("participant") on the associated SMP server using a "ServiceGroup"
+   * structure.
    */
   public final int registerParticipant (@Nonnull final String sParticipantId) throws IOException
   {
     _configureProxy ();
     final URL aUrl = _url (m_sServerUrl, ISO_6523_ACTORID_UPIS + sParticipantId);
     final String sBody = m_sServiceGroupTemplate.replace (PARAM_PARTICIPANT_IDENTIFIER, sParticipantId);
-    MyLog.info ( () -> "[SMP] Trying to register participant " + sParticipantId);
+    MyLog.info (() -> "[SMP] Trying to register participant " + sParticipantId);
 
     final HttpURLConnection aHttpCon = _openConnection (aUrl, "PUT");
     try (final OutputStreamWriter aOS = new OutputStreamWriter (aHttpCon.getOutputStream (), StandardCharsets.UTF_8))
@@ -251,7 +251,7 @@ public class SmpService
   {
     _configureProxy ();
 
-    MyLog.info ( () -> "[SMP] Trying to set business card to participant " + sParticipantID);
+    MyLog.info (() -> "[SMP] Trying to set business card to participant " + sParticipantID);
 
     final URL url = _url (m_sServerUrl, "businesscard", ISO_6523_ACTORID_UPIS + sParticipantID);
     final HttpURLConnection connection = _openConnection (url, "PUT");
@@ -265,8 +265,8 @@ public class SmpService
   }
 
   /**
-   * Adds all "documentId"/"processId" to a registered "user" ("participant") on
-   * the associated SMP server using a "ServiceMetadata" structure.
+   * Adds all "documentId"/"processId" to a registered "user" ("participant") on the associated SMP
+   * server using a "ServiceMetadata" structure.
    */
   @Nonnull
   public final List <Integer> addDocumentTypeIDs (@Nonnull final String sParticipantId) throws IOException
@@ -288,10 +288,10 @@ public class SmpService
                            aMetadata.getDocumentTypeUrlPart ());
 
     final String sBody = aMetadata.m_sXmlTemplateContent.replace (PARAM_PARTICIPANT_IDENTIFIER, sParticipantID);
-    MyLog.info ( () -> "[SMP] Trying to add document type " +
-                       aMetadata.m_sDocumentIdentifier +
-                       " to participant " +
-                       sParticipantID);
+    MyLog.info (() -> "[SMP] Trying to add document type " +
+                      aMetadata.m_sDocumentIdentifier +
+                      " to participant " +
+                      sParticipantID);
 
     final HttpURLConnection aHttpCon = _openConnection (aUrl, "PUT");
     try (final OutputStreamWriter aWriter = new OutputStreamWriter (aHttpCon.getOutputStream (),
@@ -303,12 +303,17 @@ public class SmpService
   }
 
   /**
-   * Deletes a single process (incl. all its endpoints) of each configured
-   * document type from a registered "user" ("participant"), without touching
-   * other processes of the same document type. Uses the phoss SMP REST API
-   * <code>DELETE /{ServiceGroupId}/services/{DocumentTypeId}/{ProcessId}</code>
-   * (see https://github.com/phax/phoss-smp/discussions/491, since phoss SMP
-   * v8.1.8).
+   * Deletes a single process (incl. all its endpoints) of each configured document type from a
+   * registered "user" ("participant"), without touching other processes of the same document type.
+   * Uses the phoss SMP REST API
+   * <code>DELETE /{ServiceGroupId}/services/{DocumentTypeId}/{ProcessId}</code> (see
+   * https://github.com/phax/phoss-smp/discussions/491, since phoss SMP v8.1.8).
+   * 
+   * @param sParticipantId
+   *        Participant ID to handle
+   * @return List of API HTTP status codes
+   * @throws IOException
+   *         in case of error
    */
   @Nonnull
   public final List <Integer> deleteProcesses (@Nonnull final String sParticipantId) throws IOException
@@ -329,21 +334,27 @@ public class SmpService
                            SERVICES,
                            aMetadata.getDocumentTypeUrlPart (),
                            aMetadata.getProcessUrlPart ());
-    MyLog.info ( () -> "[SMP] Trying to delete process " +
-                       aMetadata.m_sProcessIdentifier +
-                       " of document type " +
-                       aMetadata.m_sDocumentIdentifier +
-                       " from participant " +
-                       sParticipantID);
+    MyLog.info (() -> "[SMP] Trying to delete process " +
+                      aMetadata.m_sProcessIdentifier +
+                      " of document type " +
+                      aMetadata.m_sDocumentIdentifier +
+                      " from participant " +
+                      sParticipantID);
 
     final HttpURLConnection aHttpCon = _openConnection (aUrl, "DELETE");
     return aHttpCon.getResponseCode ();
   }
 
   /**
-   * Deletes the whole service metadata of each configured document type from a
-   * registered "user" ("participant"). Uses the phoss SMP REST API
+   * Deletes the whole service metadata of each configured document type from a registered "user"
+   * ("participant"). Uses the phoss SMP REST API
    * <code>DELETE /{ServiceGroupId}/services/{DocumentTypeId}</code>.
+   * 
+   * @param sParticipantId
+   *        Participant ID to handle
+   * @return List of API HTTP status codes
+   * @throws IOException
+   *         in case of error
    */
   @Nonnull
   public final List <Integer> deleteDocumentTypeIDs (@Nonnull final String sParticipantId) throws IOException
@@ -356,31 +367,30 @@ public class SmpService
   }
 
   private int _deleteDocumentTypeID (@Nonnull final String sParticipantID, @Nonnull final Metadata aMetadata)
-                                                                                                             throws IOException
+                                                                                                              throws IOException
   {
     _configureProxy ();
     final URL aUrl = _url (m_sServerUrl,
                            ISO_6523_ACTORID_UPIS + sParticipantID,
                            SERVICES,
                            aMetadata.getDocumentTypeUrlPart ());
-    MyLog.info ( () -> "[SMP] Trying to delete document type " +
-                       aMetadata.m_sDocumentIdentifier +
-                       " from participant " +
-                       sParticipantID);
+    MyLog.info (() -> "[SMP] Trying to delete document type " +
+                      aMetadata.m_sDocumentIdentifier +
+                      " from participant " +
+                      sParticipantID);
 
     final HttpURLConnection aHttpCon = _openConnection (aUrl, "DELETE");
     return aHttpCon.getResponseCode ();
   }
 
   /**
-   * Removes a registered "user"/"participant" and all its metadata from the
-   * associated SMP server.
+   * Removes a registered "user"/"participant" and all its metadata from the associated SMP server.
    */
   public final int deleteParticipant (@Nonnull final String sParticipantId) throws IOException
   {
     _configureProxy ();
     final URL aUrl = _url (m_sServerUrl, ISO_6523_ACTORID_UPIS + sParticipantId);
-    MyLog.info ( () -> "[SMP] Trying to delete participant " + sParticipantId);
+    MyLog.info (() -> "[SMP] Trying to delete participant " + sParticipantId);
 
     final HttpURLConnection aHttpCon = _openConnection (aUrl, "DELETE");
     return aHttpCon.getResponseCode ();
