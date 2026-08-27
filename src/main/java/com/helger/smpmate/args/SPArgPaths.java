@@ -38,6 +38,17 @@ public final class SPArgPaths
 
   /**
    * Initializes a new instance by its properties.
+   *
+   * @param sCsvInput
+   *        The path of the CSV input file. May not be <code>null</code>.
+   * @param sCsvFailOutput
+   *        The path of the CSV fail output file. May be <code>null</code> in which case it is
+   *        derived from the CSV input file.
+   * @param sServiceGroupTemplate
+   *        The path of the ServiceGroup template file. May not be <code>null</code>.
+   * @param aServiceMetadata
+   *        The ServiceMetadata configurations to be used. May not be <code>null</code>. The
+   *        provided list is copied.
    */
   public SPArgPaths (@Nonnull final String sCsvInput,
                      @Nullable final String sCsvFailOutput,
@@ -52,6 +63,8 @@ public final class SPArgPaths
 
   /**
    * Retrieves the path of the CSV input file
+   *
+   * @return The path of the CSV input file as provided in the constructor.
    */
   public String getCsvInput ()
   {
@@ -60,6 +73,8 @@ public final class SPArgPaths
 
   /**
    * Retrieves the path of the CSV fail output file or {@code null}
+   *
+   * @return The path of the CSV fail output file or {@code null} if none was configured.
    */
   public String getCsvFailOutput ()
   {
@@ -68,6 +83,8 @@ public final class SPArgPaths
 
   /**
    * Retrieves the path of the ServiceGroup template
+   *
+   * @return The path of the ServiceGroup template file as provided in the constructor.
    */
   public String getServiceGroupTemplate ()
   {
@@ -75,7 +92,10 @@ public final class SPArgPaths
   }
 
   /**
-   * Retrieves the path of the ServiceMetadata template
+   * Retrieves the ServiceMetadata configurations
+   *
+   * @return An unmodifiable list of all contained ServiceMetadata configurations. Never
+   *         <code>null</code>.
    */
   @Nonnull
   public List <SPArgServiceMetadata> getServiceMetadata ()

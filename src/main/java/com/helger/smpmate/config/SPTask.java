@@ -44,8 +44,15 @@ public final class SPTask
   private final EnumSet <ESPArgOption> m_aOptions;
   private final ESPOperation m_eOperation;
 
-  /*
+  /**
    * Initializes a task configuration.
+   *
+   * @param aRel
+   *        The base directory relative paths are resolved against. May be <code>null</code>.
+   * @param aOrigin
+   *        The task from the JSON task configuration. May not be <code>null</code>.
+   * @throws ValidationException
+   *         If the provided task configuration is invalid
    */
   public SPTask (@Nullable final Path aRel, @Nonnull final SPArgTask aOrigin) throws ValidationException
   {

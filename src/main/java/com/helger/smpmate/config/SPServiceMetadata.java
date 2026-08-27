@@ -23,6 +23,12 @@ import javax.annotation.Nullable;
 
 import com.helger.smpmate.args.SPArgServiceMetadata;
 
+/**
+ * Represents a single ServiceMetadata configuration from business point of view.
+ *
+ * @author Philip Helger
+ * @see com.helger.smpmate.args.SPArgServiceMetadata
+ */
 public final class SPServiceMetadata
 {
   /** Default document identifier scheme, used if none is provided */
@@ -46,6 +52,14 @@ public final class SPServiceMetadata
     return sValue == null ? null : sValue.trim ();
   }
 
+  /**
+   * Initializes a ServiceMetadata configuration.
+   *
+   * @param aRel
+   *        The base directory relative paths are resolved against. May be <code>null</code>.
+   * @param aOrigin
+   *        The ServiceMetadata from the JSON task configuration. May not be <code>null</code>.
+   */
   public SPServiceMetadata (@Nullable final Path aRel, @Nonnull final SPArgServiceMetadata aOrigin)
   {
     m_aTemplate = SPPaths.toPath (aRel, aOrigin.getTemplate ());
@@ -59,6 +73,9 @@ public final class SPServiceMetadata
     m_sProcessIdentifier = _trimmed (aOrigin.getProcessIdentifier ());
   }
 
+  /**
+   * @return the absolute path of the ServiceMetadata template file. Never <code>null</code>.
+   */
   @Nonnull
   public Path getTemplate ()
   {
@@ -75,6 +92,9 @@ public final class SPServiceMetadata
     return m_sDocumentIdentifierScheme;
   }
 
+  /**
+   * @return the document type identifier value or <code>null</code> if none was configured.
+   */
   @Nullable
   public String getDocumentIdentifier ()
   {
@@ -91,6 +111,9 @@ public final class SPServiceMetadata
     return m_sProcessIdentifierScheme;
   }
 
+  /**
+   * @return the process identifier value or <code>null</code> if none was configured.
+   */
   @Nullable
   public String getProcessIdentifier ()
   {

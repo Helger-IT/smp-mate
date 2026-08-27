@@ -35,8 +35,18 @@ public final class SPArgTask
   private final EnumSet <ESPArgOption> m_aOptions;
   private final ESPOperation m_eOperation;
 
-  /*
-   * Initializes a new instance by its properties, defaulting to operation {@link ESPOperation#ADD}.
+  /**
+   * Initializes a new instance by its properties, defaulting to operation
+   * {@link ESPOperation#ADD}.
+   *
+   * @param aPaths
+   *        The paths for this task. May not be <code>null</code>.
+   * @param aSmp
+   *        The SMP configuration for this task. May not be <code>null</code>.
+   * @param aProxy
+   *        The proxy configuration for this task. May be <code>null</code>.
+   * @param aOptions
+   *        The options for this task. May be <code>null</code>.
    */
   public SPArgTask (final SPArgPaths aPaths,
                     final SPArgSMP aSmp,
@@ -46,8 +56,19 @@ public final class SPArgTask
     this (aPaths, aSmp, aProxy, aOptions, null);
   }
 
-  /*
+  /**
    * Initializes a new instance by its properties.
+   *
+   * @param aPaths
+   *        The paths for this task. May not be <code>null</code>.
+   * @param aSmp
+   *        The SMP configuration for this task. May not be <code>null</code>.
+   * @param aProxy
+   *        The proxy configuration for this task. May be <code>null</code>.
+   * @param aOptions
+   *        The options for this task. May be <code>null</code>.
+   * @param eOperation
+   *        The operation to be performed by this task. May be <code>null</code>.
    */
   public SPArgTask (final SPArgPaths aPaths,
                     final SPArgSMP aSmp,

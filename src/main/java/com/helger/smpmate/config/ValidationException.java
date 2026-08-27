@@ -22,10 +22,18 @@ import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 /**
+ * Thrown if a task configuration is syntactically readable but semantically invalid.
+ *
  * @author Philip Helger
  */
 public class ValidationException extends Exception
 {
+  /**
+   * Initializes a new instance with all found problems.
+   *
+   * @param aProblems
+   *        The list of all problems found in the task configuration. May not be <code>null</code>.
+   */
   ValidationException (@Nonnull final List <String> aProblems)
   {
     super ("The task configuration is invalid:" +

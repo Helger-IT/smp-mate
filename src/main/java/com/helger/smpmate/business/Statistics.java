@@ -42,6 +42,9 @@ public final class Statistics
 
   /**
    * Retrieves the "smpFails" list.
+   *
+   * @return An unmodifiable set of all participant IDs that failed on the SMP, in the order they
+   *         were added. Never <code>null</code>.
    */
   @Nonnull
   public Set <String> getSmpFails ()
@@ -99,22 +102,35 @@ public final class Statistics
 
   /**
    * Adds an entry to the "smpFails" list.
+   *
+   * @param sParticipantID
+   *        The participant ID that failed on the SMP. May not be <code>null</code>.
    */
   public void addSmpFail (@Nonnull final String sParticipantID)
   {
     m_aSmpFails.add (sParticipantID);
   }
 
+  /**
+   * Increments the "businessCardSuccessCount" counter.
+   */
   public void incrementBusinessCardSuccessCount ()
   {
     businessCardSuccessCount++;
   }
 
+  /**
+   * Increments the "businessCardFailCount" counter.
+   */
   public void incrementBusinessCardFailCount ()
   {
     businessCardFailCount++;
   }
 
+  /**
+   * @return A human readable, multi line representation of all collected statistics. Never
+   *         <code>null</code>.
+   */
   @Nonnull
   public String getAsString ()
   {

@@ -28,6 +28,11 @@ public final class SPArgAuthority
 
   /**
    * Initializes a new instance by its properties.
+   *
+   * @param sName
+   *        The user name to be used.
+   * @param sPassword
+   *        The password to be used.
    */
   public SPArgAuthority (final String sName, final String sPassword)
   {
@@ -37,6 +42,8 @@ public final class SPArgAuthority
 
   /**
    * Retrieves the name
+   *
+   * @return The user name as provided in the constructor.
    */
   public String getName ()
   {
@@ -45,6 +52,8 @@ public final class SPArgAuthority
 
   /**
    * Retrieves the password
+   *
+   * @return The password as provided in the constructor.
    */
   public String getPassword ()
   {

@@ -31,6 +31,14 @@ public final class SPArgProxy
 
   /**
    * Initializes a new instance by its properties.
+   *
+   * @param sHost
+   *        The proxy host name (or IP address) to be used.
+   * @param sPort
+   *        The proxy port to be used.
+   * @param aAuthority
+   *        The proxy authorization parameters. May be <code>null</code> if the proxy needs no
+   *        authorization.
    */
   public SPArgProxy (final String sHost, final String sPort, @Nullable final SPArgAuthority aAuthority)
   {
@@ -41,6 +49,8 @@ public final class SPArgProxy
 
   /**
    * Retrieves the proxy host name (or ip address)
+   *
+   * @return The proxy host name (or IP address) as provided in the constructor.
    */
   public String getHost ()
   {
@@ -49,6 +59,8 @@ public final class SPArgProxy
 
   /**
    * Retrieves the proxy's port
+   *
+   * @return The proxy port as provided in the constructor.
    */
   public String getPort ()
   {
@@ -57,6 +69,8 @@ public final class SPArgProxy
 
   /**
    * Retrieves the proxy's authorization parameters - if any - or {@code null}
+   *
+   * @return The proxy authorization parameters or {@code null} if none were configured.
    */
   @Nullable
   public SPArgAuthority getAuthority ()

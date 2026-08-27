@@ -38,6 +38,14 @@ public final class SPReader
   /**
    * Retrieves a new task instance by reading a json file specified by a given
    * path
+   *
+   * @param aPath
+   *        The path of the JSON task file to be read. May not be <code>null</code>.
+   * @return The read task configuration. Never <code>null</code>.
+   * @throws IOException
+   *         In case of read errors
+   * @throws ValidationException
+   *         If the read task configuration is invalid
    */
   public static SPTask readTask (@Nonnull final Path aPath) throws IOException, ValidationException
   {

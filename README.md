@@ -96,7 +96,7 @@ Hinweis: Bei den DELETE-Operationen werden die XML-Vorlagen (`template`) nicht b
 Die JAR-Datei `smp-mate-<Versionsnummer>-app.jar` kann in jeder beliebigen Umgebung mit dem nachfolgend beschriebenen Aufruf ausgeführt werden.
 Dabei muss sichergestellt werden, dass die Pfade und Dateien erreichbar sind, ebenso wie der SMP-Server.
 
-Es muss mindestens Java 1.8 JRE installiert sein. 
+Es muss mindestens ein Java 25 JRE installiert sein. 
 
 ## Aufruf der ausführbaren JAR-Datei
 
@@ -112,13 +112,19 @@ Falls SMP Mate mit dem Namen einer JSON-Datei aufgerufen wird, die nicht existie
 
 ## Building
 
-Voraussetzungen: Java 1.8 oder höher, Apache Maven 3.x
+Voraussetzungen: Java 25 oder höher, Apache Maven 3.8.2 oder höher
 
 Befehl: `mvn clean install`
 
 Das Ergebnis ist die Datei `target/smp-mate-x.y.z-SNAPSHOT-app.jar` wobei `x.y.z` für die Versionsnummer steht.
 
 # News and noteworthy
+
+v2.0.0 - work in progress
+* Die minimal benötigte Java-Version wurde von 1.8 auf 25 angehoben.
+* Die URL-Erstellung erfolgt jetzt über `java.net.URI` anstatt über den veralteten `java.net.URL`-Konstruktor.
+  Eine ungültige `smp.url` in der Task-Datei wird dadurch sofort mit einer klaren Fehlermeldung abgelehnt, anstatt erst beim Verbindungsaufbau zu scheitern.
+* Die Test-Abhängigkeit wurde von JAXB 2.3 (`com.sun.xml.bind:jaxb-impl`) auf JAXB 4.0 (`org.glassfish.jaxb:jaxb-runtime`) umgestellt.
 
 v1.0.3 - 2026-08-24
 * Bei `documentIdentifier`, `documentIdentifierScheme`, `processIdentifier` und `processIdentifierScheme` werden führende und abschließende Leerzeichen jetzt automatisch entfernt.

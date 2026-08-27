@@ -43,16 +43,21 @@ public final class Main
 {
   /**
    * The main entry point of the command line application.
+   *
+   * @param aArgs
+   *        The command line arguments. Exactly one argument is expected: the path to the task file
+   *        to be executed. If the file does not exist, a task file template is created at that
+   *        location instead.
    */
   public static void main (@Nonnull final String... aArgs)
   {
     try
     {
-      MyLog.info ( () -> "SMP Mate v" +
-                         SMPMateVersion.BUILD_VERSION +
-                         " (built " +
-                         SMPMateVersion.BUILD_TIMESTAMP +
-                         ")");
+      MyLog.info (() -> "SMP Mate v" +
+                        SMPMateVersion.BUILD_VERSION +
+                        " (built " +
+                        SMPMateVersion.BUILD_TIMESTAMP +
+                        ")");
 
       if (1 == aArgs.length)
       {
@@ -82,7 +87,7 @@ public final class Main
           }
 
           // Log statistics
-          MyLog.info ( () -> aConfigurator.getStats ().getAsString ());
+          MyLog.info (() -> aConfigurator.getStats ().getAsString ());
 
           // Write result CSV
           aConfigurator.saveAllFailedOnes ();
@@ -90,30 +95,28 @@ public final class Main
         else
         {
           // Copy template to disk
-          MyLog.info ( () -> "Task file '" +
-                             aTaskPath +
-                             "' does not exist -> a new task file template will be created");
+          MyLog.info (() -> "Task file '" + aTaskPath + "' does not exist -> a new task file template will be created");
           try (final InputStream aIS = Main.class.getResourceAsStream ("/default.task.json"))
           {
             Files.createDirectories (aTaskPath.getParent ());
             Files.copy (aIS, aTaskPath);
           }
-          MyLog.info ( () -> "Successfully created task file template at '" + aTaskPath + "'");
+          MyLog.info (() -> "Successfully created task file template at '" + aTaskPath + "'");
         }
       }
       else
       {
-        MyLog.warning ( () -> "Requires a single argument:\n" +
-                              "                      PATH: a path to the desired task file\n" +
-                              "                   but was: " +
-                              Arrays.toString (aArgs) +
-                              "\n\n" +
-                              "To create a new task file from a template, specify a path to a nonexistent file.");
+        MyLog.warning (() -> "Requires a single argument:\n" +
+                             "                      PATH: a path to the desired task file\n" +
+                             "                   but was: " +
+                             Arrays.toString (aArgs) +
+                             "\n\n" +
+                             "To create a new task file from a template, specify a path to a nonexistent file.");
       }
     }
     catch (final Exception ex)
     {
-      MyLog.error ( () -> "Error executing tasks", ex);
+      MyLog.error (() -> "Error executing tasks", ex);
     }
   }
 }

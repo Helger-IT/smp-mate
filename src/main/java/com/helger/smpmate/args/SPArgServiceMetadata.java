@@ -18,6 +18,12 @@ package com.helger.smpmate.args;
 
 import javax.annotation.Nullable;
 
+/**
+ * Contains a single ServiceMetadata configuration of a task configuration.
+ *
+ * @author Philip Helger
+ * @see com.helger.smpmate.config.SPServiceMetadata
+ */
 public final class SPArgServiceMetadata
 {
   private final String m_sTemplate;
@@ -26,6 +32,17 @@ public final class SPArgServiceMetadata
   private final String m_sProcessIdentifierScheme;
   private final String m_sProcessIdentifier;
 
+  /**
+   * Initializes a new instance by its properties, without explicit identifier schemes, so that the
+   * default identifier schemes are used.
+   *
+   * @param sTemplate
+   *        The path of the ServiceMetadata template file. May be {@code null}.
+   * @param sDocumentTypeIdentifier
+   *        The document type identifier value. May be {@code null}.
+   * @param sProcessIdentifier
+   *        The process identifier value. May be {@code null}.
+   */
   public SPArgServiceMetadata (@Nullable final String sTemplate,
                                @Nullable final String sDocumentTypeIdentifier,
                                @Nullable final String sProcessIdentifier)
@@ -33,6 +50,20 @@ public final class SPArgServiceMetadata
     this (sTemplate, null, sDocumentTypeIdentifier, null, sProcessIdentifier);
   }
 
+  /**
+   * Initializes a new instance by its properties.
+   *
+   * @param sTemplate
+   *        The path of the ServiceMetadata template file. May be {@code null}.
+   * @param sDocumentIdentifierScheme
+   *        The document identifier scheme. May be {@code null} if the default should be used.
+   * @param sDocumentTypeIdentifier
+   *        The document type identifier value. May be {@code null}.
+   * @param sProcessIdentifierScheme
+   *        The process identifier scheme. May be {@code null} if the default should be used.
+   * @param sProcessIdentifier
+   *        The process identifier value. May be {@code null}.
+   */
   public SPArgServiceMetadata (@Nullable final String sTemplate,
                                @Nullable final String sDocumentIdentifierScheme,
                                @Nullable final String sDocumentTypeIdentifier,
@@ -46,6 +77,9 @@ public final class SPArgServiceMetadata
     m_sProcessIdentifierScheme = sProcessIdentifierScheme;
   }
 
+  /**
+   * @return the path of the ServiceMetadata template file or {@code null} if none was configured.
+   */
   @Nullable
   public String getTemplate ()
   {
@@ -61,6 +95,9 @@ public final class SPArgServiceMetadata
     return m_sDocumentIdentifierScheme;
   }
 
+  /**
+   * @return the document type identifier value or {@code null} if none was configured.
+   */
   @Nullable
   public String getDocumentIdentifier ()
   {
@@ -76,6 +113,9 @@ public final class SPArgServiceMetadata
     return m_sProcessIdentifierScheme;
   }
 
+  /**
+   * @return the process identifier value or {@code null} if none was configured.
+   */
   @Nullable
   public String getProcessIdentifier ()
   {

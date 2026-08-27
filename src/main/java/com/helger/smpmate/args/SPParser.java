@@ -50,7 +50,15 @@ public final class SPParser
   private SPParser ()
   {}
 
-  // Retrieves a new Instance
+  /**
+   * Retrieves a new task instance by reading the JSON content of the provided input stream.
+   *
+   * @param aIS
+   *        The input stream to read the JSON content from. May not be <code>null</code>.
+   * @return The parsed task configuration. Never <code>null</code>.
+   * @throws IOException
+   *         In case of read errors
+   */
   @Nonnull
   public static SPArgTask readTask (@Nonnull @WillNotClose final InputStream aIS) throws IOException
   {

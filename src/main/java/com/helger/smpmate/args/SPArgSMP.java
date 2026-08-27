@@ -30,6 +30,12 @@ public final class SPArgSMP
 
   /**
    * Initializes a new instance by its properties.
+   *
+   * @param sUrl
+   *        The base URL of the SMP server to be used.
+   * @param aAuthority
+   *        The SMP authorization parameters. May be <code>null</code> if no authorization should be
+   *        used.
    */
   public SPArgSMP (final String sUrl, @Nullable final SPArgAuthority aAuthority)
   {
@@ -39,6 +45,8 @@ public final class SPArgSMP
 
   /**
    * Retrieves the url of the smp server.
+   *
+   * @return The base URL of the SMP server as provided in the constructor.
    */
   public String getUrl ()
   {
@@ -46,7 +54,9 @@ public final class SPArgSMP
   }
 
   /**
-   * Retrieves the proxy's authorization parameters - if any - or {@code null}
+   * Retrieves the SMP's authorization parameters - if any - or {@code null}
+   *
+   * @return The SMP authorization parameters or {@code null} if none were configured.
    */
   @Nullable
   public SPArgAuthority getAuthority ()

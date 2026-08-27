@@ -50,7 +50,6 @@ public final class MyLog
                             @Nonnull final Supplier <String> aMsgSupplier,
                             @Nullable final Exception ex)
   {
-    @SuppressWarnings ("resource")
     final PrintStream o = eLevel.intValue () >= Level.SEVERE.intValue () ? System.err : System.out;
 
     final String sPrefix = "[" + eLevel.getName () + "] ";
@@ -64,16 +63,36 @@ public final class MyLog
     }
   }
 
+  /**
+   * Logs a message on level "info".
+   *
+   * @param aMsgSupplier
+   *        The supplier of the message to be logged. May not be <code>null</code>.
+   */
   public static void info (@Nonnull final Supplier <String> aMsgSupplier)
   {
     _log (Level.INFO, aMsgSupplier, null);
   }
 
+  /**
+   * Logs a message on level "warning".
+   *
+   * @param aMsgSupplier
+   *        The supplier of the message to be logged. May not be <code>null</code>.
+   */
   public static void warning (@Nonnull final Supplier <String> aMsgSupplier)
   {
     _log (Level.WARNING, aMsgSupplier, null);
   }
 
+  /**
+   * Logs a message on level "error".
+   *
+   * @param aMsgSupplier
+   *        The supplier of the message to be logged. May not be <code>null</code>.
+   * @param ex
+   *        The exception to be logged along with the message. May be <code>null</code>.
+   */
   public static void error (@Nonnull final Supplier <String> aMsgSupplier, @Nullable final Exception ex)
   {
     _log (Level.SEVERE, aMsgSupplier, ex);

@@ -19,9 +19,10 @@ package com.helger.smpmate.business;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -148,6 +149,11 @@ public class SmpService
 
   /**
    * Initializes a new instance.
+   *
+   * @param aTask
+   *        The task configuration to be used. May not be <code>null</code>.
+   * @throws IOException
+   *         If one of the configured XML template files cannot be read
    */
   public SmpService (@Nonnull final SPTask aTask) throws IOException
   {
@@ -211,26 +217,35 @@ public class SmpService
   @Nonnull
   private static String _urlEncoded (@Nonnull final String sValue)
   {
-    try
-    {
-      return URLEncoder.encode (sValue, StandardCharsets.UTF_8.name ());
-    }
-    catch (final UnsupportedEncodingException ex)
-    {
-      throw new IllegalStateException ("No UTF-8", ex);
-    }
+    return URLEncoder.encode (sValue, StandardCharsets.UTF_8);
   }
 
   @Nonnull
   private static URL _url (@Nonnull final String sHead, @Nonnull final String... aPath) throws MalformedURLException
   {
     final String sTail = Stream.of (aPath).map (SmpService::_urlEncoded).collect (Collectors.joining ("/"));
-    return new URL (sHead + (sHead.endsWith ("/") ? "" : "/") + sTail);
+    final String sURL = sHead + (sHead.endsWith ("/") ? "" : "/") + sTail;
+    try
+    {
+      return new URI (sURL).toURL ();
+    }
+    catch (final URISyntaxException | IllegalArgumentException ex)
+    {
+      final MalformedURLException ex2 = new MalformedURLException ("Invalid URL '" + sURL + "'");
+      ex2.initCause (ex);
+      throw ex2;
+    }
   }
 
   /**
    * Registers a "user" ("participant") on the associated SMP server using a "ServiceGroup"
    * structure.
+   *
+   * @param sParticipantId
+   *        Participant ID to handle
+   * @return The API HTTP status code
+   * @throws IOException
+   *         in case of error
    */
   public final int registerParticipant (@Nonnull final String sParticipantId) throws IOException
   {
@@ -247,6 +262,17 @@ public class SmpService
     return aHttpCon.getResponseCode ();
   }
 
+  /**
+   * Sets the Business Card of a registered "user" ("participant") on the associated SMP server.
+   *
+   * @param sParticipantID
+   *        Participant ID to handle
+   * @param content
+   *        The XML representation of the Business Card to be set
+   * @return The API HTTP status code
+   * @throws IOException
+   *         in case of error
+   */
   public int putBusinessCard (@Nonnull final String sParticipantID, @Nonnull final byte [] content) throws IOException
   {
     _configureProxy ();
@@ -267,6 +293,12 @@ public class SmpService
   /**
    * Adds all "documentId"/"processId" to a registered "user" ("participant") on the associated SMP
    * server using a "ServiceMetadata" structure.
+   *
+   * @param sParticipantId
+   *        Participant ID to handle
+   * @return List of API HTTP status codes
+   * @throws IOException
+   *         in case of error
    */
   @Nonnull
   public final List <Integer> addDocumentTypeIDs (@Nonnull final String sParticipantId) throws IOException
@@ -385,6 +417,12 @@ public class SmpService
 
   /**
    * Removes a registered "user"/"participant" and all its metadata from the associated SMP server.
+   *
+   * @param sParticipantId
+   *        Participant ID to handle
+   * @return The API HTTP status code
+   * @throws IOException
+   *         in case of error
    */
   public final int deleteParticipant (@Nonnull final String sParticipantId) throws IOException
   {

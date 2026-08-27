@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this project is
 
-**smp-mate** ("SMP MAintenance TEchnology") is a Java CLI bulk-provisioning tool for a Peppol Service Metadata Publisher (SMP). It reads a JSON *task file* and provisions Participant Identifiers (with optional Business Card XML) into an SMP via REST. Single-module Maven project, Java 8 source/target, JUnit 4 tests.
+**smp-mate** ("SMP MAintenance TEchnology") is a Java CLI bulk-provisioning tool for a Peppol Service Metadata Publisher (SMP). It reads a JSON *task file* and provisions Participant Identifiers (with optional Business Card XML) into an SMP via REST. Single-module Maven project, Java 25 source/target, JUnit 4 tests.
 
 The README (`README.md`) is German-only.
 

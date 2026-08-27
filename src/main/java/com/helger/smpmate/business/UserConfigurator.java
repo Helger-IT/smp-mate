@@ -49,8 +49,13 @@ public final class UserConfigurator
   private final ESPOperation m_eOperation;
   private final Statistics m_aStats = new Statistics ();
 
-  /*
+  /**
    * Initializes a new instance.
+   *
+   * @param aTask
+   *        The task configuration to be executed. May not be <code>null</code>.
+   * @throws IOException
+   *         If the SMP service cannot be initialized from the provided task
    */
   public UserConfigurator (@Nonnull final SPTask aTask) throws IOException
   {
@@ -62,6 +67,9 @@ public final class UserConfigurator
     m_eOperation = aTask.getOperation ();
   }
 
+  /**
+   * @return The statistics collected so far. Never <code>null</code>.
+   */
   @Nonnull
   public Statistics getStats ()
   {
